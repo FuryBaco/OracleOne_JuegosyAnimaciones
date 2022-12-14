@@ -1,67 +1,37 @@
-var pantalla = document.querySelector('canvas');
-var pincel = pantalla.getContext('2d');
-var brushColor = "black";
+function dibujarRectangulo(x, y, base, altura, color) {
+  var pantalla = document.querySelector("canvas");
+  var pincel = pantalla.getContext("2d");
 
-
-pincel.fillStyle = 'grey';
-pincel.fillRect(0, 0, 600, 400);
-
-pincel.fillStyle = "red";
-pincel.fillRect(0,0,50,50);
-
-pincel.fillStyle = "green";
-pincel.fillRect(50,0,50,50);
-
-pincel.fillStyle = "blue";
-pincel.fillRect(100,0,50,50);
-
-var puedoDibujar = false;
-
-function dibujarCirculo(evento) {
-
-  if (puedoDibujar) {
-    var x = evento.pageX - pantalla.offsetLeft;
-    var y = evento.pageY - pantalla.offsetTop;
-    if ((x > 150 || y > 50)){
-    pincel.fillStyle = brushColor;
-    pincel.beginPath();
-    pincel.arc(x, y, 5, 0, 2 * 3.14);
-    pincel.fill();
-    }
-  }
-
+  pincel.fillStyle = color;
+  pincel.fillRect(x, y, base, altura);
+  pincel.strokeStyle = "black";
+  pincel.strokeRect(x, y, base, altura);
 }
 
-function chooseColor(evento){
-  var x = evento.pageX - pantalla.offsetLeft;
-  var y = evento.pageY - pantalla.offsetTop;
-  console.log(x,y) ;
-  if ((x >= 0 && x <= 50) && (y >= 0 && y <= 50)){
-    brushColor = "red";
-  } else if ((x > 50 && x <= 100) && (y >= 0 && y <= 50)){
-    brushColor = "green";
-  } else if ((x > 100 && x <= 150) && (y >= 0 && y <= 50)){
-    brushColor = "blue";
+function escribirTexto(x, y, texto) {
+  var pantalla = document.querySelector("canvas");
+  var pincel = pantalla.getContext("2d");
+
+  pincel.font = "15px Georgia";
+  pincel.fillStyle = "black";
+  pincel.fillText(texto, x, y);
+}
+
+function dibujarBarra(x, y, serie, colores, texto) {
+
+  escribirTexto(x, y - 10, texto);
+
+  var sumaAltura = 0;
+  for (var i = 0; i < serie.length; i++) {
+    var altura = serie[i];
+    dibujarRectangulo(x, y + sumaAltura, 50, altura, colores[i]);
+    sumaAltura = sumaAltura + altura;
   }
 }
 
+var colores = ["blue", "green", "yellow", "red", "gray"];
+var serie2009 = [6, 47, 41, 3, 3];
+var serie2019 = [81, 9, 3, 3, 4];
 
-
-pantalla.onclick = chooseColor;
-
-pantalla.onmousemove = dibujarCirculo;
-
-function habilitarDibujar() {
-
-  puedoDibujar = true;
-}
-
-function deshabilitarDibujar() {
-
-  puedoDibujar = false;
-}
-
-pantalla.onmousedown = habilitarDibujar;
-
-pantalla.onmouseup = deshabilitarDibujar;
-
+dibujarBarra(50, 50, serie2009, colores, "2009");
+dibujarBarra(150, 50, serie2019, colores, "2019");
